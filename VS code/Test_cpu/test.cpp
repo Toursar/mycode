@@ -30,6 +30,7 @@ int main()
             cout << "第" << i << "次"
                  << " x = " << x
                  << " y = " << y << endl;
+            //join与detach两种方法都可以
             //th1.join();
             //th2.join();
             th1.detach();
