@@ -38,6 +38,8 @@ namespace version1
     Singleton_pattern* Singleton_pattern::Single = nullptr;
 }
 //利用智能指针以及锁，保证线程安全，并且释放申请的内存
+//注意cpu的乱序执行会导致在初始化对象时先进行返回指针，然后在调用对象的构造函数
+//这会导致后面的线程判断对象已被创建，从而取到未初始化的对象。需要增加内存屏障或C++11的atomic类
 namespace version2
 {
     mutex mex;
