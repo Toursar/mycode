@@ -107,10 +107,11 @@ namespace class_test
     }
 }
 
+template<class T1, class T2>
 class Test
 {
 public:
-    Test(int _a, int _b) : a(_a), b(_b), c(&a)
+    Test(T1 _a, T2 _b) : a(_a), b(_b)
     {
         cout << "constrctor" << endl;
     }
@@ -120,12 +121,12 @@ public:
     void ad() { add(); }
 
 private:
-    int a;
-    mutable int b;
-    int *c;
+    T1 a;
+    mutable T2 b;
 };
 
-void Test::add() const
+template<class T1, class T2>
+void Test<T1, T2>::add() const
 {
     cout << *c << endl;
     *c = b;
@@ -133,7 +134,7 @@ void Test::add() const
 }
 int main()
 {
-    Test a(1, 2);
+    Test<int, int> a(2, 3);
     a.add();
     return 0;
 }
