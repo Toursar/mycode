@@ -6,7 +6,7 @@
 
 using namespace std;
 
-namespace test1
+namespace convert_test
 {
     int a = 1;
     void short_convert()
@@ -34,7 +34,9 @@ namespace test1
     }
     void static_var()
     {
+        //不为静态变量赋值，会默认给0,指针给nullptr
         static int a;
+        cout << "a = " << a << endl;
     }
 }
 
@@ -94,9 +96,11 @@ namespace class_test
     };
     void test1(Test a)
     {
+        //调用一此构造函数，在创建对象时，调用一次拷贝构造在传参时
     }
     void test2(Test& a)
     {
+        //仅调用一次构造函数
     }
     //测试构造函数调用情况,引用的作用
     void test_main()
@@ -106,35 +110,82 @@ namespace class_test
         test2(a);
     }
 }
-
-template<class T1, class T2>
-class Test
+//模板的特化，偏特化
+namespace template_test
 {
-public:
-    Test(T1 _a, T2 _b) : a(_a), b(_b)
+    template<class T1, class T2>
+    class Test
     {
-        cout << "constrctor" << endl;
+    public:
+        Test(T1 _a, T2 _b) : a(_a), b(_b)
+        {
+            cout << "general template constrctor" << endl;
+        }
+        ~Test() { cout << "deconstruct" << endl; }
+    private:
+        T1 a;
+        T2 b;
+    };
+
+    template<class T1, class T2>
+    class Test<T1*, T2*>
+    {
+    public:
+        Test(T1* _a, T2* _b) : a(_a), b(_b)
+        {
+            cout << "partial pointer specialization constrctor" << endl;
+        }
+        ~Test() { cout << "deconstruct" << endl; }
+    private:
+        T1* a;
+        T2* b;
+    };
+
+    template<class T2>
+    class Test<int, T2>
+    {
+    public:
+        Test(int _a, T2 _b) : a(_a), b(_b)
+        {
+            cout << "partial int specialization constrctor" << endl;
+        }
+        ~Test() { cout << "deconstruct" << endl; }
+    private:
+        int a;
+        T2 b;
+    };
+
+    template<>
+    class Test<int, double>
+    {
+    public:
+        Test(int _a, double _b) : a(_a), b(_b)
+        {
+            cout << "all int double specialization constrctor" << endl;
+        }
+        ~Test() { cout << "deconstruct" << endl; }
+    private:
+        int a;
+        double b;
+    };
+    int main_test()
+    {
+        int a = 1, c = 2;
+        double b = 2.1, d = 3.2;
+        cout << "test1 using ";
+        //优先调用偏特化版本，会调用<int,T2>的版本
+        Test<int, int> test1(a, c);
+        cout << "test2 using ";
+        Test<int*, int*> test2(&a, &c);
+        cout << "test3 using ";
+        Test<int, double> test3(a, b);
+        cout << "test4 using ";
+        Test<double, double> test4(b, d);
+        return 0;
     }
-    ~Test() { cout << "deconstruct" << endl; }
-    Test(Test &a) { cout << "copy" << endl; }
-    void add() const;
-    void ad() { add(); }
-
-private:
-    T1 a;
-    mutable T2 b;
-};
-
-template<class T1, class T2>
-void Test<T1, T2>::add() const
-{
-    cout << *c << endl;
-    *c = b;
-    cout << *c << a << endl;
 }
+
 int main()
 {
-    Test<int, int> a(2, 3);
-    a.add();
     return 0;
 }
