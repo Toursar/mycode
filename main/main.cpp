@@ -185,7 +185,35 @@ namespace template_test
     }
 }
 
+namespace tryvatch_test
+{
+    void main_test()
+    {
+        vector<int> a(5, 0);
+        try
+        {
+            for (int i = -1; i <= 5; ++i)
+            {
+                if (i < 0)
+                    throw -1;
+                else if (i >= 5)
+                    throw 1;
+                a[i] = i;
+                cout << a[i] << endl;
+            }
+        }
+        catch(int i)
+        {
+            if (i == -1)
+                cout << "array underflow" << endl;
+            else if (i == 1)
+                cerr << "array overflow" << endl;
+        }
+    }
+}
+
 int main()
 {
+    
     return 0;
 }
