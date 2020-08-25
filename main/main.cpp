@@ -185,7 +185,7 @@ namespace template_test
     }
 }
 
-namespace tryvatch_test
+namespace trycatch_test
 {
     void main_test()
     {
@@ -212,8 +212,41 @@ namespace tryvatch_test
     }
 }
 
+namespace type_convert
+{
+    void test_main()
+    {
+        const int a = 1;
+        int b = const_cast<int&>(a);
+        b = 2;
+        cout << "a = " << a << " b = " << b << endl;
+    }
+}
+//类成员指针
+namespace classmember_ptr
+{
+    class A
+    {
+    public:
+        A(string _str, int _a): str(_str), a(_a) {}
+        ~A() {}
+        string str;
+        int a = 1;
+    };
+
+    int test_main()
+    {
+        string A:: *ptr1 = &A::str;
+        int A::*ptr2 = &A::a;
+        A test1("asd", 1), test2("qwe", 2);
+        cout << test1.*ptr1 << "\t" << test1.*ptr2 << endl;
+        cout << test2.*ptr1 << "\t" << test2.*ptr2 << endl;
+        return 0;
+    }
+
+}
+
 int main()
 {
-    
     return 0;
 }
