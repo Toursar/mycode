@@ -1,5 +1,7 @@
 #include<iostream>
 #include<string>
+#include<stdio.h>
+#include<string.h>
 #include<vector>
 #include<queue>
 #include<cmath>
@@ -230,23 +232,102 @@ namespace classmember_ptr
     public:
         A(string _str, int _a): str(_str), a(_a) {}
         ~A() {}
+        void out(int temp)
+        {
+            cout << str << temp << endl;
+        }
         string str;
-        int a = 1;
+        int a;
     };
 
     int test_main()
     {
+        //类型成员指针
         string A:: *ptr1 = &A::str;
         int A::*ptr2 = &A::a;
+        int b = 1;
+        //类型函数指针
+        void (A::*ptr3)(int a) = &A::out;
         A test1("asd", 1), test2("qwe", 2);
         cout << test1.*ptr1 << "\t" << test1.*ptr2 << endl;
         cout << test2.*ptr1 << "\t" << test2.*ptr2 << endl;
+        (test1.*ptr3)(b);
+        (test2.*ptr3)(b);
         return 0;
     }
 
 }
 
+namespace static_test
+{
+    class test1
+    {
+    private:
+        //静态函数只会在第一次调用时初始化一次，第一次已经初始化
+        //后面的每一次改变都会影响到所有类的实例
+        static int ssum;
+        int sum;
+    public:
+        test1(int m) : sum(0)
+        {
+            sum += m;
+            ssum += m;
+        }
+        ~test1() {}
+        void get()
+        {
+            cout << sum << endl;
+        }
+        void gets()
+        {
+            cout << ssum << endl;
+        }
+        //静态函数不可以调用非静态成员变量
+        static void sget()
+        {
+            //cout << sum << endl;
+            cout << ssum << endl;
+        }
+    };
+    int test1::ssum = 0;
+
+    void test_f()
+    {
+        //只会被定义一次
+        static int var = 1;
+        cout << var << endl;
+        var = 2;
+        cout << var << endl;
+    }
+
+    void test_main()
+    {
+        test1 test(1);
+        test.get();
+        test.gets();
+        test1 testt(2);
+        testt.get();
+        testt.gets();
+        test_f();
+        test_f();
+    }
+}
+
+void getmemory(char **p, int num)
+{
+    *p = (char *)malloc(num);
+}
+void Test()
+{
+    char * str = nullptr;
+    //str = (char *)malloc(100);
+    getmemory(&str, 100);
+    strcpy(str, "hello");
+    cout << str << endl;
+}
+
 int main()
 {
+    cout << muti(15, 3) << endl;
     return 0;
 }
