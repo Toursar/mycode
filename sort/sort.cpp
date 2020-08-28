@@ -3,6 +3,7 @@
 #include<cmath>
 #include<string.h>
 #include<ctime>
+#include<algorithm>
 
 using namespace std;
 namespace heap
@@ -241,20 +242,50 @@ namespace radix
         return count;
     }
 }
+//区间调度算法
+namespace sort_algorithm
+{
+    void main_test()
+    {
+        vector<vector<int>> res = {{1, 4}, {0, 1}, {1, 3}, {1, 2}, {2, 4}, {3, 5}, {4, 5}};
+        sort(res.begin(), res.end(), [](const vector<int> &a, const vector<int> &b) -> bool {
+            return a[1] < b[1];
+        });
+        vector<vector<int>> temp;
+        int lowest = res[0][0];
+        int count = 0;
+        for (auto res1 : res)
+        {
+            if (res1[0] >= lowest)
+            {
+                lowest = res1[1];
+                continue;
+            }
+            ++count;
+            temp.push_back(res1);
+        }
+        cout << count << " need to be deleted " << endl;
+        for (int i = 0; i < temp.size(); ++i)
+        {
+            cout << '{' << temp[i][0] << ',' << temp[i][1] << '}' << endl;
+        }
+    }
+}
+
 //using namespace heap;
 //using namespace quick;
 //using namespace merge;
 using namespace radix;
 int main()
 {
-    srand(time(nullptr));
-    vector<int> a(20, 0);
-    for (auto iter = a.begin(); iter != a.end(); ++iter)
-    {
-        *iter = rand()%200;
-    }
-    radix_sort sorta;
-    sorta.sort1(a);
-    for (int i = 0; i < a.size(); ++i)
-        cout << a[i] << endl;
+    // srand(time(nullptr));
+    // vector<int> a(20, 0);
+    // for (auto iter = a.begin(); iter != a.end(); ++iter)
+    // {
+    //     *iter = rand()%200;
+    // }
+    // radix_sort sorta;
+    // sorta.sort1(a);
+    // for (int i = 0; i < a.size(); ++i)
+    //     cout << a[i] << endl;
 }

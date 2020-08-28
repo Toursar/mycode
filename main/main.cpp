@@ -1,10 +1,13 @@
 #include<iostream>
+#include<algorithm>
+#include<unordered_map>
 #include<string>
 #include<stdio.h>
 #include<string.h>
 #include<vector>
 #include<queue>
 #include<cmath>
+#include<functional>
 
 using namespace std;
 
@@ -328,6 +331,15 @@ void Test()
 
 int main()
 {
-    cout << muti(15, 3) << endl;
+    // unordered_map<int, string>map;
+    // map.insert({2, "2"});
+    // map.insert({5, "5"});
+    // map.insert({3, "3"});
+    // map.insert({1, "1"});
+    // map.insert({7, "7"});
+    // for (unordered_map<int, string>::iterator iter = map.begin(); iter != map.end(); ++iter)
+    // {
+    //     cout << iter->first << endl;
+    // }
     return 0;
 }
