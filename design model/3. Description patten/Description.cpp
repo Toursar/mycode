@@ -58,8 +58,9 @@ public:
 class decorator_1 : public decorator
 {
 private:
-    product *product1;
+    //product *product1;
 public:
+    //父类没有默认构造，子类构造前需要通过参数列表调用对应父类的构造函数
     decorator_1(product *temp) : decorator(temp){}
     ~decorator_1(){}
     void domorething()
@@ -71,7 +72,7 @@ public:
 class decorator_2 : public decorator
 {
 private:
-    product *product1;
+    //product *product1;
 public:
     decorator_2(product *temp) : decorator(temp){}
     ~decorator_2(){}
