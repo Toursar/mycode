@@ -328,9 +328,29 @@ void Test()
     strcpy(str, "hello");
     cout << str << endl;
 }
+//lambda函数嵌套使用
+void lambda_test()
+{
+    auto f1 = [](int j, int i) {
+        auto f3 = [j](int i) {
+            cout << i - j << endl;
+        };
+        f3(i);
+    };
+    f1(1, 2);
+    //返回一个lambda函数指针
+    auto f2 = [](int j) {
+        return [j](int i) {
+            cout << "i = " << i << " j = " << j << endl;
+            return i - j;
+        };
+    };
+    cout << f2(1)(2) << endl;
+}
 
 int main()
 {
+    lambda_test();
     // unordered_map<int, string>map;
     // map.insert({2, "2"});
     // map.insert({5, "5"});
