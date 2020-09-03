@@ -329,27 +329,18 @@ void Test()
     cout << str << endl;
 }
 
-class a
-{
-public:
-    virtual void b1()
-    {
-    }
-};
-class a1 : public a
-{
-public:
-    virtual void b1() override
-    {}
-    void b2(){}
-};
-
 int main()
 {
-    char a[12] = "hello world";
-    //strncpy(a, "shit!", 3);
-    printf("%s\n", a);
-    cout << strlen(a) << endl;
+    int a, sum = 0;
+    while(cin >> a)
+    {
+        sum += a;
+        if (cin.get() == '\n')
+        {
+            cout << sum << endl;
+            sum = 0;
+        }
+    }
     // unordered_map<int, string>map;
     // map.insert({2, "2"});
     // map.insert({5, "5"});
