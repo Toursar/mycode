@@ -1,60 +1,37 @@
 #include<iostream>
 #include<vector>
 #include<algorithm>
+#include<cmath>
+#include<stack>
+#include<map>
 
 using namespace std;
 
 int main()
 {
-    int T;
-    cin >> T;
-    int m, n;
-    vector<vector<int>> res;
-    for (int k = 0; k < T; ++k)
+    int n;
+    while(cin >> n)
     {
-        cin >> n >> m;
-        vector<int> a1(n, 0);
-        vector<vector<int>> a2(m, vector<int>(2, 0));
+        map<int, int> mp;
+        stack<int> st;
         for (int i = 0; i < n; ++i)
         {
-            cin >> a1[i];
+            int temp;
+            cin >> temp;
+            st.push(temp);
+            mp[temp]++;
         }
-        for (int i = 0; i < m; ++i)
+        for (int i = 0; i < st.size(); ++i)
         {
-            cin >> a2[i][0];
-            a2[i][1] = i + 1;
-        }
-        sort(a2.begin(), a2.end(), [](vector<int>& a, vector<int>& b)
-             {
-                 return a[0] < b[0];
-             });
-        vector<int> temp;
-        for (int i = 0; i < n; ++i)
-        {
-            int left = 0, right = a2.size() - 1;
-            while(left <= right)
+            int temp = st.top();
+            if (mp[temp] > 0)
             {
-                int mid = left + (right - left) / 2;
-                if (a1[i] < a2[mid][0])
-                    right = mid - 1;
-                else
-                    left = mid + 1;
+                cout << temp << endl;
+                mp[temp]--;
             }
-            if (left >= a2.size())
-                temp.push_back(-1);
-            else
-                temp.push_back(a2[left][1]);
+            st.pop();
         }
-        res.push_back(temp);
+        mp.clear();
     }
-    for (int i = 0; i < T; ++i)
-    {
-        for (int j = 0; j < res[i].size(); ++j)
-        {
-            if (j != res[i].size() - 1)
-                cout << res[i][j] << ' ';
-            else
-                cout << res[i][j] << endl;
-        }
-    }
+    return 0;
 }

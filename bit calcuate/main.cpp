@@ -34,12 +34,24 @@ void XOR_operator(int n)
     //任何数与0异或不变，与自己异或为0
     cout << "n ^ n = " << (n ^ n) << endl;
     cout << "n ^ 0 = " << (n ^ 0) << endl;
+    //用于判断两数字是否异号
+    cout << "-1 ^ 5 < 0 ? " << (((-1) ^ (5)) < 0) << endl;
+    cout << "-1 ^ -5 < 0 ? " << (((-1) ^ (-5)) < 0) << endl;
+    cout << "1 ^ 5 < 0 ? " << ((1 ^ 5) < 0) << endl;
+}
+//利用位运算可以进行大小写的转换
+void Letter()
+{
+    //或' '可以转小写 ' 'ASCII码为00100000，大写 A ASCII码为 01000001, 大写 a ASCII码为 01100001
+    cout << static_cast<char>(('A' | ' ')) << ' ' << static_cast<char>(('a' | ' ')) << endl;
+    //与'_'可以转大写 '_'ASCII码为01011111，大写 A ASCII码为 01000001, 大写 a ASCII码为 01100001
+    cout << static_cast<char>(('A' & '_')) << ' ' << static_cast<char>(('a' & '_')) << endl;
+    //异或' '可以转大写 ' 'ASCII码为00100000，大写 A ASCII码为 01000001, 大写 a ASCII码为 01100001
+    cout << static_cast<char>(('A' ^ ' ')) << ' ' << static_cast<char>(('a' ^ ' ')) << endl;
 }
 
 int main()
 {
-    cout << muti(5, 9) << endl;
-    and_operator(6);
-    XOR_operator(12);
+    XOR_operator(2);
     return 0;
 }
