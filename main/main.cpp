@@ -8,6 +8,7 @@
 #include<queue>
 #include<cmath>
 #include<functional>
+#include<memory>
 
 using namespace std;
 
@@ -316,40 +317,20 @@ namespace static_test
     }
 }
 
-void getmemory(char **p, int num)
-{
-    *p = (char *)malloc(num);
-}
-void Test()
-{
-    char * str = nullptr;
-    //str = (char *)malloc(100);
-    getmemory(&str, 100);
-    strcpy(str, "hello");
-    cout << str << endl;
-}
+struct AA {
+
+int a;       //长度4 > 2 按2对齐；偏移量为0；存放位置区间[0,3]
+
+char b;  //长度1 < 2 按1对齐；偏移量为4；存放位置区间[4]
+double d;  //长度1 < 2 按1对齐；偏移量为7；存放位置区间[8]；共九个字节
+short c1;
+short c;     //长度2 = 2 按2对齐；偏移量要提升到2的倍数6；存放位置区间[6,7]
+//char e;
+};
 
 int main()
 {
-    int a, sum = 0;
-    while(cin >> a)
-    {
-        sum += a;
-        if (cin.get() == '\n')
-        {
-            cout << sum << endl;
-            sum = 0;
-        }
-    }
-    // unordered_map<int, string>map;
-    // map.insert({2, "2"});
-    // map.insert({5, "5"});
-    // map.insert({3, "3"});
-    // map.insert({1, "1"});
-    // map.insert({7, "7"});
-    // for (unordered_map<int, string>::iterator iter = map.begin(); iter != map.end(); ++iter)
-    // {
-    //     cout << iter->first << endl;
-    // }
+    AA a;
+    cout << sizeof(a) << endl;
     return 0;
 }

@@ -63,7 +63,7 @@ namespace heap
         int right(int root) { return root * 2 + 1; }
     };
 }
-
+//快速排序（不稳定）
 namespace quick
 {
     class quick_sort
@@ -105,7 +105,7 @@ namespace quick
         sort_q(res, left + 1, n);
     }
 }
-
+//归并排序（稳定）
 namespace merge
 {
     class merge_sort
@@ -171,7 +171,7 @@ namespace merge
         }
     }
 }
-//基数排序
+//基数排序（稳定）
 namespace radix
 {
     class radix_sort
@@ -201,7 +201,7 @@ namespace radix
                 //本步计算0-9上的数字个数
                 count[(data[i] / temp_bit) % 10]++;
             }
-            //这一步到下一个循环结束,将count转换为当前末尾为i的数字应该从save的那个位置开始保存
+            //这一步到下一个循环结束,将count转换为当前末尾为i的数字应该从save的哪个位置开始保存
             int sum = count[0];
             count[0] = 0;
             for (int i = 1; i <= 9; ++i)
@@ -242,6 +242,60 @@ namespace radix
         return count;
     }
 }
+//插入排序（稳定），希尔排序（不稳定）
+namespace shell_sort
+{
+    class shell
+    {
+    public:
+        void insert_sort(vector<int>&, int, int);
+        void shell_sort1(vector<int>&);
+        void swap(int &, int &);
+    };
+    //插入排序
+    void shell::insert_sort(vector<int>& data, int start = 0, int gap = 1)
+    {
+        if (data.empty())
+        {
+            cout << "array is empty!" << endl;
+            return;
+        }
+        int m = data.size();
+        for (int i = start; i < m; i += gap)
+        {
+            for (int j = i; j > start; j -= gap)
+            {
+                if (data[j] < data[j - gap])
+                    swap(data[j], data[j - gap]);
+                else
+                    break;
+            }
+        }
+    }
+
+    void shell::shell_sort1(vector<int>& data)
+    {
+        int m = data.size();
+        //首先定义gap为数组一半，之后每次分段排序后gap减半
+        int gap = m / 2;
+        while (gap > 0)
+        {
+            for (int i = 0; i < gap; ++i)
+            {
+                this->insert_sort(data, i, gap);
+            }
+            gap /= 2;
+        }
+    }
+
+    void shell::swap(int &a, int &b)
+    {
+        int temp = b;
+        b = a;
+        a = temp;
+    }
+}
+
 //区间调度算法
 namespace sort_algorithm
 {
@@ -275,17 +329,17 @@ namespace sort_algorithm
 //using namespace heap;
 //using namespace quick;
 //using namespace merge;
-using namespace radix;
+//using namespace radix;
 int main()
 {
-    // srand(time(nullptr));
-    // vector<int> a(20, 0);
-    // for (auto iter = a.begin(); iter != a.end(); ++iter)
-    // {
-    //     *iter = rand()%200;
-    // }
-    // radix_sort sorta;
-    // sorta.sort1(a);
-    // for (int i = 0; i < a.size(); ++i)
-    //     cout << a[i] << endl;
+    srand(time(nullptr));
+    vector<int> a(20, 0);
+    for (auto iter = a.begin(); iter != a.end(); ++iter)
+    {
+        *iter = rand()%200;
+    }
+    shell_sort::shell test1;
+    test1.shell_sort1(a);
+    for (int i = 0; i < a.size(); ++i)
+        cout << a[i] << endl;
 }
