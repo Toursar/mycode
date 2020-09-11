@@ -6,6 +6,7 @@
 #include<algorithm>
 
 using namespace std;
+
 namespace heap
 {
     class heap_sort{
@@ -301,6 +302,7 @@ namespace sort_algorithm
 {
     void main_test()
     {
+        //将区间以区间的末尾进行排序
         vector<vector<int>> res = {{1, 4}, {0, 1}, {1, 3}, {1, 2}, {2, 4}, {3, 5}, {4, 5}};
         sort(res.begin(), res.end(), [](const vector<int> &a, const vector<int> &b) -> bool {
             return a[1] < b[1];
@@ -310,6 +312,7 @@ namespace sort_algorithm
         int count = 0;
         for (auto res1 : res)
         {
+            //判断后面的区间头是否与前一个的区间为相交，相交则不能同时完成
             if (res1[0] >= lowest)
             {
                 lowest = res1[1];
