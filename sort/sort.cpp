@@ -3,7 +3,9 @@
 #include<cmath>
 #include<string.h>
 #include<ctime>
+#include<queue>
 #include<algorithm>
+#include<climits>
 
 using namespace std;
 
@@ -16,6 +18,7 @@ namespace heap
         vector<int> res; 
         heap_sort() { res.push_back(0); }
         ~heap_sort() {}
+        //将要插入的数字放在数组末端，然后使用swim将插入的数字上浮到正确位置
         void insert(int num)
         {
             res.push_back(num);
@@ -42,6 +45,8 @@ namespace heap
                 index = min;
             }
         }
+        //删除操作，将顶端的待删除数字与尾端的数字交换，然后删除尾端
+        //将顶端的被交换数字进行sink操作，下沉到正确位置
         void remove()
         {
             int m = res.size();
@@ -59,6 +64,7 @@ namespace heap
             res[j] = res[i];
             res[i] = temp;
         }
+        //当前节点的父节点，左右子节点的下标关系
         int parent(int root) { return root / 2; }
         int left(int root) { return root * 2; }
         int right(int root) { return root * 2 + 1; }
@@ -84,24 +90,33 @@ namespace quick
     }
     void quick_sort::sort_q(vector<int>& res, int m, int n)
     {
+        //递归的出口
         if (m >= n)
             return;
+        //取数组第一个数字为当前排序进行比较的标准数字
         int mid = res[m];
         int left = m, right = n;
         while(left < right)
         {
+            //数组最右边比标准大的数字，无需交换，跳过
             while (left < right && res[right] >= mid)
                 --right;
+            //交换右边比标准数字小的到左端
             res[left] = res[right];
             //此处不应该再写left++项，应该交由下一个while循环判断
             //++left;  //防止只有两项时无论大小都发生交换的问题。
+            //数组左端比标准数字小的无需交换，跳过
             while(left < right && res[left] < mid)
                 ++left;
+            //交换左端，比标准数字大的到右端。
             res[right] = res[left];
             //同理此处不应该再写right++项
             //++right;
         }
+        //一趟排序之后，当left = right时的位置即为标准数字的位置
+        //一次遍历的结果是，标准位置左端的数字都比标准数字小，右端都比标准数字大
         res[left] = mid;
+        //一次递归，左右子数组，即可完成排序
         sort_q(res, m, left - 1);
         sort_q(res, left + 1, n);
     }
@@ -132,8 +147,10 @@ namespace merge
         if (m < n)
         {
             int mid = m + (n - m) / 2;
+            //将数组打散成只含一个数的小数组
             sort_2(res, m, mid);
             sort_2(res, mid + 1, n);
+            //将两个小数组合并为一个有序的大数组
             sort_m(res, m, n);
             res = temp;
         }
@@ -147,6 +164,8 @@ namespace merge
         int left1 = m, right1 = mid;
         int left2 = mid + 1, right2 = n;
         int k = m;
+        //循环会将两个数组依次放入一个临时数组
+        //直到两个数组中有一个数组元素全部放完
         while(left1 <= right1 && left2 <= right2)
         {
             if (res[left1] < res[left2])
@@ -160,6 +179,7 @@ namespace merge
                 ++left2;
             }
         }
+        //把没放完的另一个数组直接全部放入临时数组，构建出一个更大的有序数组
         while(left1 <= right1)
         {
             temp[k++] = res[left1];
@@ -266,6 +286,7 @@ namespace shell_sort
         {
             for (int j = i; j > start; j -= gap)
             {
+                //分别与前面的数字比较，若是小，则交换
                 if (data[j] < data[j - gap])
                     swap(data[j], data[j - gap]);
                 else
@@ -294,6 +315,44 @@ namespace shell_sort
         int temp = b;
         b = a;
         a = temp;
+    }
+}
+//计数排序
+namespace count
+{
+    class count_sort
+    {
+    public:
+        void count_sort1(vector<int>&);
+    };
+
+    void count_sort::count_sort1(vector<int>& data)
+    {
+        //找到数据中最大的值，构建最大值大小的数组
+        //以数组中的值为新数组的下标进行储存
+        //储存完成后，按照下标顺序遍历新的数组即可得到排序结果
+        int max_num = INT_MIN;
+        for (int num : data)
+        {
+            max_num = max(max_num, num);
+        }
+        //注意数组的大小为max_num + 1。
+        vector<queue<int>> res(max_num + 1, queue<int>());
+        for (int num : data)
+        {
+            res[num].push(num);
+        }
+        int data_num = 0;
+        //将新数组中有值的队列一次弹出
+        //使用队列的原因是可以保证排序的稳定性
+        for (int i = 0; i < res.size(); ++i)
+        {
+            while(!res[i].empty())
+            {
+                data[data_num++] = res[i].front();
+                res[i].pop();
+            }
+        }
     }
 }
 
@@ -329,10 +388,7 @@ namespace sort_algorithm
     }
 }
 
-//using namespace heap;
-//using namespace quick;
-//using namespace merge;
-//using namespace radix;
+
 int main()
 {
     srand(time(nullptr));
@@ -341,8 +397,8 @@ int main()
     {
         *iter = rand()%200;
     }
-    shell_sort::shell test1;
-    test1.shell_sort1(a);
+    count::count_sort test1;
+    test1.count_sort1(a);
     for (int i = 0; i < a.size(); ++i)
         cout << a[i] << endl;
 }
