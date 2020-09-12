@@ -3,7 +3,7 @@
 #include<queue>
 
 using namespace std;
-
+//手写一颗树结构，然后层序输出
 struct TreeNode
 {
     int val;
