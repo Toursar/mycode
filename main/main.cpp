@@ -328,9 +328,25 @@ short c;     //长度2 = 2 按2对齐；偏移量要提升到2的倍数6；存�
 //char e;
 };
 
+class father
+{
+public:
+    int a = 1;
+    double b = 1.1;
+protected:
+    int r = 3;
+private:
+    vector<int> res;
+    int c = 2;
+    double d = 2.2;
+};
+
+class son : protected father
+{
+};
+
 int main()
 {
-    AA a;
-    cout << sizeof(a) << endl;
+    father* test = new son;
     return 0;
 }
