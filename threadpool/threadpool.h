@@ -7,6 +7,7 @@
 #include<future>
 #include<iostream>
 #include<functional>
+#include <utility>
 
 class threadpool {
 private:
@@ -22,14 +23,15 @@ private:
 public:
     threadpool(int thread_num) : stop(false) {
         for (int i = 0; i < thread_num; ++i) {
-            workers.emplace_back([this]() {
+            workers.emplace_back([this, i]() {
                 while (true)
                 {
+                    std::cout << "worker " << i << " working..." << std::endl;
                     std::function<void()> task;
                     {
                         std::unique_lock<std::mutex> lock(this->queue_mutex);
                         //队列为空，线程休眠
-                        while (this->tasks.empty())
+                        if (this->tasks.empty())
                             this->condition.wait(lock);
                         //一直运行知道接收到停止命令，并且处理完当前队列的任务
                         if (this->stop && this->tasks.empty())
@@ -38,26 +40,31 @@ public:
                         this->tasks.pop();
                     }
                     task();
+                    std::cout << "worker " << i << " done" << std::endl;
                 }
             });
         }
     }
 
+    ~threadpool() {}
+
+    //enqueue方法利用变长模板参数方法，将不同的返回值与参数的函数打包为woid()的形式，放入队列中
     //使用decltype来确认需要执行的任务的函数返回值
     template <typename F, typename... Args>
     auto enqueue(F &&f, Args &&... args) -> std::future<decltype(f(args...))> {
-        auto task = std::make_shared<std::packaged_task<decltype(f(args...))>>(
-            std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+        std::function<decltype(f(args...))()> func = std::bind(std::forward<F>(f), std::forward<Args>(args)...);
+        auto task = std::make_shared<std::packaged_task<decltype(f(args...))()>>(func);
+        std::function<void()> func_temp = [task]() {
+                (*task)();
+            };
         {
             std::unique_lock<std::mutex> lock(queue_mutex);
             if (stop)
                 std::cerr << "thread pool is already stopped!" << std::endl;
             //将当前传入的函数打包为void()型的函数，其中返回值已被res接收，然后放入任务队列中
-            tasks.emplace([task]() {
-                (*task)();
-            });
+            tasks.emplace(func_temp);
         }
-        condition.notify_one();
+        this->condition.notify_one();
         return task->get_future();
     }
 
@@ -82,7 +89,7 @@ public:
     // }
 
 
-    ~threadpool() {
+    void shutdown() {
         //将stop改为1，唤醒所有线程，等待任务运行完成后结束
         {
             std::unique_lock<std::mutex> lock(queue_mutex);
