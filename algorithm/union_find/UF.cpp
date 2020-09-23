@@ -1,7 +1,7 @@
 #include "UF.h"
 
 UF::UF(int n) : nums(n) {
-    //
+    //初始化父节点数组
     parents.resize(n);
     //初始化每个节点的后续节点数目，也就是此节点后面还有多长
     size.resize(n);
@@ -19,6 +19,8 @@ void UF::merge(int first, int second) {
     //先找到两个节点的根节点
     int par_first = find(first);
     int par_second = find(second);
+    if (par_first == par_second)
+        return;
     //根据两个根节点的连通分量大小，即后继的节点数
     //将节点数小的根节点连接到大的根节点上，同时更新根节点size的值
     if (size[par_first] > size[par_second]) {

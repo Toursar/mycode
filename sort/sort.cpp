@@ -8,7 +8,7 @@
 #include<climits>
 
 using namespace std;
-
+//堆排序（不稳定）
 namespace heap
 {
     class heap_sort{
