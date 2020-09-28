@@ -35,7 +35,10 @@ public:
                             this->condition.wait(lock);
                         //一直运行知道接收到停止命令，并且处理完当前队列的任务
                         if (this->stop && this->tasks.empty())
+                        {
+                            std::cout << "recieve stop" << std::endl;
                             return;
+                        }
                         task = this->tasks.front();
                         this->tasks.pop();
                     }
@@ -48,7 +51,7 @@ public:
 
     ~threadpool() {}
 
-    //enqueue方法利用变长模板参数方法，将不同的返回值与参数的函数打包为woid()的形式，放入队列中
+    //enqueue方法利用变长模板参数方法，将不同的返回值与参数的函数打包为void()的形式，放入队列中
     //使用decltype来确认需要执行的任务的函数返回值
     template <typename F, typename... Args>
     auto enqueue(F &&f, Args &&... args) -> std::future<decltype(f(args...))> {

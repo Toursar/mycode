@@ -9,6 +9,7 @@
 #include<cmath>
 #include<functional>
 #include<memory>
+#include<utility>
 
 using namespace std;
 
@@ -328,15 +329,53 @@ short c;     //长度2 = 2 按2对齐；偏移量要提升到2的倍数6；存�
 //char e;
 };
 
-int& test()
-{
-    int *a = new int(5);
-    return *a;
+int hash_func(string& str) {
+    int res = 0;
+    for (char a : str) {
+        res += a - 'a' + 1;
+    }
+    return res;
+}
+
+bool is_equal(string &str1, string& str2) {
+    int m = str1.size();
+    int n = str2.size();
+    if (m != n) {
+        cout << "strings size are not equal" << endl;
+        return false;
+    }
+    for (int i = 0; i < m; ++i) {
+        if (str1[i] != str2[i])
+            return false;
+    }
+    return true;
+}
+
+int next_hash() {
+
+}
+
+int RK(string& str, string& pattern) {
+    int m = str.size();
+    int n = pattern.size();
+    int pat_hash = hash_func(pattern);
+    //首先计算第一个等长的主字符串的模式
+    string temp = str.substr(0, n);
+    int str_hash = hash_func(temp);
+    for (int i = 0; i <= m - n; ++i) {
+        if (pat_hash == hash_func(temp) && is_equal(pattern, temp)) {
+            return i;
+        } else {
+
+        }
+    }
+    return -1;
 }
 
 int main()
 {
-    int a = test() + 1;
-    cout << (6 & 6) << endl;
+    string str = "ababc";
+    string target = "abc";
+    cout << RK(str, target) << endl;
     return 0;
 }
