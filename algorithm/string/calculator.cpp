@@ -12,8 +12,7 @@ int main() {
     return 0;
 }
 
-int calculator(string& str)
-{
+int calculator(string& str) {
     if (str.empty())
         return 0;
     //第一个数字没有符号，我们默认为+号
@@ -21,8 +20,7 @@ int calculator(string& str)
     int num = 0;
     //使用栈实现计算器
     stack<int> st;
-    while (str.size() > 0)
-    {
+    while (str.size() > 0) {
         //为了方便处理括号的递归调用，我们每次选择string的第一个字符后，都会从原string中删除该字符
         char c = str.front();
         str.erase(0, 1);
@@ -30,18 +28,15 @@ int calculator(string& str)
         if (is_num(c))
             num = num * 10 + (c - '0');
         //如果遇到括号，那么进行递归，优先运算出括号内的结果
-        if (c == '(')
-        {
+        if (c == '(') {
             num = calculator(str);
         }
         //如果不是数字，且不是空格，那么就是符号了
         //同时应该注意最后一个数字后面没有符号了，也需要计算
-        if ((!is_num(c) && c != ' ') || str.size() == 0)
-        {
+        if ((!is_num(c) && c != ' ') || str.size() == 0) {
             //每次计算我们都是与当前数字的前一个符合进行组合
             //由于算式没有第一个符合，因此第一个符号我们默认为+
-            switch (sign)
-            {
+            switch (sign) {
                 int temp;
                 //如果为+-号，直接与前面的符号运算以后入栈
                 case '+':
@@ -76,15 +71,13 @@ int calculator(string& str)
     //将栈内的所有元素相加，由于-号入栈时已经转换为负数
     //所以直接进行累加即可
     int res = 0;
-    while (!st.empty())
-    {
+    while (!st.empty()) {
         res += st.top();
         st.pop();
     }
     return res;
 }
 //判断字符是否为一个数字
-bool is_num(char a)
-{
+bool is_num(char a) {
     return ((a - '0') >= 0 && (a - '0') < 10) ? 1 : 0;
 }

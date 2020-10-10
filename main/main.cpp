@@ -9,6 +9,7 @@
 #include<cmath>
 #include<functional>
 #include<memory>
+#include<set>
 #include<utility>
 
 using namespace std;
@@ -329,53 +330,114 @@ short c;     //长度2 = 2 按2对齐；偏移量要提升到2的倍数6；存�
 //char e;
 };
 
-int hash_func(string& str) {
-    int res = 0;
-    for (char a : str) {
-        res += a - 'a' + 1;
-    }
-    return res;
-}
-
-bool is_equal(string &str1, string& str2) {
-    int m = str1.size();
-    int n = str2.size();
-    if (m != n) {
-        cout << "strings size are not equal" << endl;
-        return false;
-    }
-    for (int i = 0; i < m; ++i) {
-        if (str1[i] != str2[i])
-            return false;
-    }
-    return true;
-}
-
-int next_hash() {
-
-}
-
-int RK(string& str, string& pattern) {
-    int m = str.size();
-    int n = pattern.size();
-    int pat_hash = hash_func(pattern);
-    //首先计算第一个等长的主字符串的模式
-    string temp = str.substr(0, n);
-    int str_hash = hash_func(temp);
-    for (int i = 0; i <= m - n; ++i) {
-        if (pat_hash == hash_func(temp) && is_equal(pattern, temp)) {
-            return i;
-        } else {
-
+class ExamRoom {
+private:
+    int N;
+public:
+    class node {
+    private:
+        int N;
+    public:
+        vector<int> a;
+        node(vector<int>& temp, int N) : a(temp) {
+            this->N = N;
         }
+        bool operator>(node* b) {
+            int dis_a = distance(this->a);
+            int dis_b = distance(b->a);
+            if (dis_a == dis_b) {
+                return this->a[0] > b->a[0];
+            }
+            return dis_a < dis_b;
+        }
+        int distance(vector<int>& a) {
+            if (a[0] == -1) return a[1];
+            if (a[1] == N) return N - 1 - a[0];
+            return (a[1] - a[0]) / 2;
+        }
+    };
+    set<node*, greater<node*>> tree;
+    unordered_map<int, node*> start;
+    unordered_map<int, node*> end;
+    ExamRoom(int N) {
+        this->N = N;
+        vector<int> vir = {-1, N};
+        node *temp = new node(vir, N);
+        add_interval(temp);
     }
-    return -1;
-}
+    
+    int seat() {
+        vector<int> longest = (*tree.begin())->a;
+        int pos;
+        if (longest[0] == -1) 
+            pos = 0;
+        else if (longest[1] == N) 
+            pos = N - 1;
+        else {
+            pos = longest[0] + (longest[1] - longest[0]) / 2;
+        }
+        remove_interval((*tree.begin()));
+        vector<int> left = {longest[0], pos};
+        vector<int> right = {pos, longest[1]};
+        node *node_left = new node(left, N);
+        node *node_right = new node(right, N);
+        add_interval(node_left);
+        add_interval(node_right);
+        return pos;
+    }
+    
+    void leave(int p) {
+        vector<int> left = end[p]->a;
+        vector<int> right = start[p]->a;
+        remove_interval(end[p]);
+        remove_interval(start[p]);
+        vector<int> merge = {left[0], right[1]};
+        node *temp = new node(merge, N);
+        add_interval(temp);
+    }
+
+    void add_interval(node* a) {
+        tree.insert(a);
+        start.insert({a->a[0], a});
+        end.insert({a->a[1], a});
+    }
+
+    void remove_interval(node* a) {
+        tree.erase(a);
+        start.erase(a->a[0]);
+        end.erase(a->a[1]);
+    }
+};
+
+class asd {  
+public:
+    pair<int, int>& num;
+    asd(pair<int, int>&& n) : num(n) {}
+    bool operator<(asd* &other) const {
+        return this->num.second < other->num.second;
+    }
+    friend ostream& operator<<(ostream& os, asd* temp) {
+        os << temp->num.first << ' ' << temp->num.second;
+        return os;
+    }
+};
 
 int main()
 {
-    string str = "ababc";
-    string target = "abc";
-    cout << RK(str, target) << endl;
-    return 0;
+    set<asd*> tree;
+    tree.insert(new asd(pair<int, int>({1, 3})));
+    tree.insert(new asd(pair<int, int>({2, 5})));
+    tree.insert(new asd(pair<int, int>({3, 4})));
+    // ExamRoom test(10);
+    // // vector<int> a1 = {1, 7};
+    // // vector<int> a2 = {3, 5};
+    // // ExamRoom::node *n1 = new ExamRoom::node(a1, 10);
+    // // ExamRoom::node *n2 = new ExamRoom::node(a2, 10);
+    // // test.tree.insert(n1);
+    // // test.tree.insert(n2);
+    // int set1 = test.seat();
+    // int set2 = test.seat();
+    // int set3 = test.seat();
+    // cout << set1 << ' ' << set2 << ' ' << set3 << endl;
+        return 0;
 }

@@ -52,7 +52,7 @@ public:
         if (info >= 6 && info <11)
             cout << "chain_2's job" << endl;
         else
-            cout << "can not handle" << endl;
+            handle->do_its_own_job(info);
     }
 };
 
@@ -77,7 +77,7 @@ int main()
     handler *hand3 = new chain3;
     hand1->next_handler(hand2);
     hand2->next_handler(hand3);
-    hand1->do_its_own_job(6);
+    hand1->do_its_own_job(15);
     delete hand1;
     return 0;
 }

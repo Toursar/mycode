@@ -6,7 +6,9 @@ using namespace std;
 //简单的懒汉模式(需要申明指向对象的指针，不然没法不实例化，也没法判断是否成功创建)
 //问题：
 //1. 不是线程安全的
-//2. 不会释放申请的空间
+//2. 不会释放申请的空间,
+//3. 如果想要delete外部接受单例的指针，会造成类对象自己delete自己的情况
+//会造成循环调用析构函数，陷入死循环，最终耗尽栈空间
 namespace version1
 {
     class Singleton_pattern
@@ -145,11 +147,12 @@ namespace version3
 //     Singleton_pattern::delete_ver Singleton_pattern::p;
 //     Singleton_pattern* Singleton_pattern::Single = new Singleton_pattern;
 }
+
 int main()
 {
     //version2::Singleton_pattern::ptr test1 = version2::Singleton_pattern::get_Instance();
     //version3::Singleton_pattern* test2 = version3::Singleton_pattern::get_instance();
     int a = 0;
-    version4::Singleton_pattern &test3 = version4::Singleton_pattern::get_instance();
+    //version4::Singleton_pattern &test3 = version4::Singleton_pattern::get_instance();
     return 0;
 }
