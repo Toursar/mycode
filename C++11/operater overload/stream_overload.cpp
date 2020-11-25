@@ -1,4 +1,5 @@
-#include<iostream>
+#include <iostream>
+#include <vector>
 
 using namespace std;
 /*******声明为友元的原因：
@@ -26,9 +27,38 @@ public:
 	}
 };
 
+// 继承标准库中的vector类，然后添加一个<<的运算符重载，实现对vector自定义运算符
+template<typename T>
+class Mvector : public vector<T> {
+public:
+    Mvector() : vector<T>(){}
+    Mvector(vector<T>& num) : vector<T>(num) {}
+    Mvector<T>& operator<<(T num) {
+        this->push_back(num);
+        return *this;
+    }
+};
+
+//利用composition的方式组合vector，并添加<<操作符的重载
+template<typename T>
+class Qvector {
+public:
+    Qvector() {}
+    Qvector& operator<<(T num) {
+        a.push_back(num);
+        return *this;
+    }
+private:
+    vector<T> a;
+};
+
 int main()
 {
 	Test test(2, 3);
 	cout << test << endl;
+	Qvector<int> num1;
+	num1 << 1 << 2 << 3;
+	Mvector<int> num2;
+	num2 << 1 << 2 << 3;
 	return 0;
 }
