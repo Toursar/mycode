@@ -46,19 +46,21 @@ public:
     void findleftnum(std::vector<int>& nums, int left, int right, int target) {
         if (left > right)
             return;
-        while (left < right) {
+        while (left <= right) {
             int mid = left + (right - left) / 2;
             if (target > nums[mid]) {
                 left = mid  + 1;
             } else if (target < nums[mid]) {
-                right = mid;
+                right = mid - 1;
             } else {
-                right = mid;
+                right = mid - 1;
             }
         }
+        //判断边界进行输出，判断结果是否超出右边界
+        left = left < nums.size() ? left : nums.size() - 1;
         if (nums[left] == target)
             std::cout << "find the leftmost " << target << " at nums[" << left << "]" << std::endl;
-        else if (left == nums.size() - 1) {
+        else if (nums[left] < target) {
             std::cout << "can not find " << target << " in nums\n";
             std::cout << target << " should between nums[" << left << "] and [" << left + 1 << "]\n";
         } else {
@@ -71,21 +73,23 @@ public:
     void findrightnum(std::vector<int>& nums, int left, int right, int target) {
         if (left > right)
             return;
-        while (left < right) {
+        while (left <= right) {
             int mid = left + (right - left) / 2;
             if (target > nums[mid]) {
                 left = mid + 1;
             } else if (target < nums[mid]) {
-                right = mid;
+                right = mid - 1;
             } else {
                 left = mid + 1;
             }
         }
-        // 最右二分需要进行的额外操作
+        // 最右二分需要进行的额外操作，判断left是否越界后，输出left即可
         left -= 1;
+        // 进行输出
+        left = left >= 0 ? left : 0;
         if (nums[left] == target)
             std::cout << "find the rightmost " << target << " at nums[" << left << "]" << std::endl;
-        else if (left == 0) {
+        else if (nums[left] > target) {
             std::cout << "can not find " << target << " in nums\n";
             std::cout << target << " should between nums[" << left - 1 << "] and [" << left << "]\n";
         } else {
@@ -97,7 +101,7 @@ public:
 
 int main() {
     bisection test;
-    std::vector<int> nums{1, 3, 4, 5, 7, 7, 7, 7, 8, 10, 10, 12, 14};
+    std::vector<int> nums{1,2,3,3,3,4,5,7,8,8,9};
     // 需要在参数中传入枚举值，给定二分查找的具体方式
-    test.find(nums, 0, bisection::rightmost);
+    test.find(nums, 0, bisection::leftmost);
 }
